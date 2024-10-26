@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Serif&display=swap" rel="stylesheet">
+  <title>Tic Tac Toe with a Twist</title>
+</head>
+<body>
+  <header>
+    <h1>Tic Tac Toe with a Twist</h1>
+    <span id="currentPlayer" aria-live="polite"></span>
+  </header>
+  <main>
+    <table class="tic-tac-toe-board" aria-label="Tic Tac Toe Board">
+      <tbody>
+        <tr>
+          <td><button aria-label="Box 1" id="square0"></button></td>
+          <td><button aria-label="Box 2" id="square1"></button></td>
+          <td><button aria-label="Box 3" id="square2"></button></td>
+        </tr>
+        <tr>
+          <td><button aria-label="Box 4" id="square3"></button></td>
+          <td><button aria-label="Box 5" id="square4"></button></td>
+          <td><button aria-label="Box 6" id="square5"></button></td>
+        </tr>
+        <tr>
+          <td><button aria-label="Box 7" id="square6"></button></td>
+          <td><button aria-label="Box 8" id="square7"></button></td>
+          <td><button aria-label="Box 9" id="square8"></button></td>
+        </tr>
+      </tbody>
+    </table>
+    <button id="reset-button" aria-label="Reset the game">Reset Game</button>
+  </main>
+  <script src="./scr/index.js" type="module"></script>
+</body>
+</html>

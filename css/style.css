@@ -1,0 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+ }
+ 
+ body {
+    background-color: #87c4c5;
+    font-family: 'Poppins', sans-serif;
+    padding: 0;
+    text-align: center;
+    height: 100vh; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+ }
+ 
+ h1 {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-top: 30px;
+ }
+ 
+.tic-tac-toe-board {
+    display: flex; /
+    justify-content: 
+    align-items: 
+    width: 80vw; 
+    height: 80vw; 
+    max-width: 600px; 
+    max-height: 600px; 
+    margin-top: 30px; 
+    background-color: #ffffff; 
+    border-radius: 8px; 
+}
+ 
+ .tic-tac-toe-board button {
+    width: 120px; 
+    height: 120px; 
+    font-size: 3rem; 
+    color: #b0413e;
+    border: 2px solid #19193e;
+    border-radius: 8px;
+    background-color: #ffffc7;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+ }
+ 
+ .tic-tac-toe-board button:hover {
+    background-color: #fff9c4;
+    transform: scale(1.05);
+ }
+ 
+ #reset-button {
+    padding: 1rem;
+    font-size: 1.25rem;
+    background-color: #19193e;
+    color: #fff;
+    border-radius: 1rem;
+    border: none;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+ }
+ 
+ #reset-button:hover {
+    background-color: #33375a;
+ }
+ 
+ #message {
+    color: #ffffc7;
+    font-size: 2rem;
+    margin-top: 20px;
+ }
+ 
+ .msg-container {
+    height: 30vmin;
+ }
+ 
+ .hide {
+    display: none;
+ } 
