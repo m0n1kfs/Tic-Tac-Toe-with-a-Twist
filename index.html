@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Serif&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/src/index.js" type="module" defer></script>
   <title>Tic Tac Toe with a Twist</title>
 </head>
 <body>
   <header>
-    <h1>Tic Tac Toe with a Twist</h1>
     <span id="currentPlayer" aria-live="polite"></span>
   </header>
   <main>
@@ -32,8 +32,8 @@
         </tr>
       </tbody>
     </table>
-    <button id="reset-button" aria-label="Reset the game">Reset Game</button>
+    <button id="show-roles-button" aria-label="Mostrar roles" style="display:none;">Mostrar roles</button>
+    <button id="new-game-button" aria-label="Comenzar de nuevo">Comenzar de nuevo</button>
   </main>
-  <script src="./scr/index.js" type="module"></script>
 </body>
 </html>
