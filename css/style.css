@@ -1,60 +1,74 @@
+:root {
+  --bg-color: #f0f0f0;            /* Color de fondo para botones */
+  --button-bg: #333;              /* Color de fondo para botones principales */
+  --button-hover-bg: #555;        /* Color de fondo al pasar el mouse por los botones principales */
+  --button-hover-bg-light: #e0e0e0; /* Color de fondo al pasar el mouse por los botones del tablero */
+}
+
 * {
-   box-sizing: border-box;
-   margin: 0;
-   padding: 0;
- }
- 
- body, html {
-   height: 100%;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   font-family: 'Poppins', sans-serif;
- }
- 
- header {
-   text-align: center;
-   margin-bottom: 20px;
- }
- 
- main {
-   display: flex;
-   flex-direction: column;
-   align-items: center;
- }
- 
- .tic-tac-toe-board {
-   border-collapse: collapse;
-   margin: 20px 0;
-   width: 320px;
- }
- 
- .tic-tac-toe-board button {
-   width: 100px; 
-   height: 100px;
-   font-size: 2rem;
-   cursor: pointer;
-   background-color: #f0f0f0;
-   border: 2px solid #333;
-   transition: background-color 0.3s;
- }
- 
- .tic-tac-toe-board button:hover {
-   background-color: #e0e0e0;
- }
- 
- #new-game-button, #show-roles-button {
-   margin-top: 20px;
-   padding: 10px 20px;
-   font-size: 1rem;
-   cursor: pointer;
-   border: none;
-   background-color: #333;
-   color: #fff;
-   transition: background-color 0.3s;
- }
- 
- #new-game-button:hover,
- #show-roles-button:hover {
-   background-color: #555;
- } 
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+}
+
+body, html {
+ height: 100%;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ font-family: 'Poppins', sans-serif;
+}
+
+header {
+ text-align: center;
+ margin-bottom: 20px;
+}
+
+main {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+
+.tic-tac-toe-board {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+ margin: 20px 0;
+ width: 320px;
+}
+
+.row {
+ display: flex;
+ gap: 10px;
+}
+
+.tic-tac-toe-board button {
+ width: 100px; 
+ height: 100px;
+ font-size: 2rem;
+ cursor: pointer;
+ background-color: var(--bg-color); /* Usando variable para el color de fondo */
+ border: 2px solid #333;
+ transition: background-color 0.3s;
+}
+
+.tic-tac-toe-board button:hover {
+ background-color: var(--button-hover-bg-light); /* Usando variable para el color de fondo al pasar el mouse */
+}
+
+#new-game-button, #show-roles-button {
+ margin-top: 20px;
+ padding: 10px 20px;
+ font-size: 1rem;
+ cursor: pointer;
+ border: none;
+ background-color: var(--button-bg); /* Usando variable para el color de fondo */
+ color: #fff;
+ transition: background-color 0.3s;
+}
+
+#new-game-button:hover,
+#show-roles-button:hover {
+ background-color: var(--button-hover-bg); /* Usando variable para el color de fondo al pasar el mouse */
+}

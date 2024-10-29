@@ -5,35 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Serif&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
-  <script src="/src/index.js" type="module" defer></script>
   <title>Tic Tac Toe with a Twist</title>
 </head>
 <body>
   <header>
-    <span id="currentPlayer" aria-live="polite"></span>
-  </header>
-  <main>
-    <table class="tic-tac-toe-board" aria-label="Tic Tac Toe Board">
-      <tbody>
-        <tr>
-          <td><button aria-label="Box 1" id="square0"></button></td>
-          <td><button aria-label="Box 2" id="square1"></button></td>
-          <td><button aria-label="Box 3" id="square2"></button></td>
-        </tr>
-        <tr>
-          <td><button aria-label="Box 4" id="square3"></button></td>
-          <td><button aria-label="Box 5" id="square4"></button></td>
-          <td><button aria-label="Box 6" id="square5"></button></td>
-        </tr>
-        <tr>
-          <td><button aria-label="Box 7" id="square6"></button></td>
-          <td><button aria-label="Box 8" id="square7"></button></td>
-          <td><button aria-label="Box 9" id="square8"></button></td>
-        </tr>
-      </tbody>
-    </table>
-    <button id="show-roles-button" aria-label="Mostrar roles" style="display:none;">Mostrar roles</button>
-    <button id="new-game-button" aria-label="Comenzar de nuevo">Comenzar de nuevo</button>
-  </main>
+    <span id="currentPlayer" aria-live="polite">¡Haz la primera jugada!</span>
+</header>
+<main>
+  <div class="tic-tac-toe-board" aria-label="Tic Tac Toe Board" role="grid">
+    <div class="row" role="row">
+      <button class="square" data-index="0" role="gridcell"></button>
+      <button class="square" data-index="1" role="gridcell"></button>
+      <button class="square" data-index="2" role="gridcell"></button>
+    </div>
+    <div class="row" role="row">
+      <button class="square" data-index="3" role="gridcell"></button>
+      <button class="square" data-index="4" role="gridcell"></button>
+      <button class="square" data-index="5" role="gridcell"></button>
+    </div>
+    <div class="row" role="row">
+      <button class="square" data-index="6" role="gridcell"></button>
+      <button class="square" data-index="7" role="gridcell"></button>
+      <button class="square" data-index="8" role="gridcell"></button>
+    </div>
+  </div>
+  <button id="show-roles-button" aria-label="Mostrar roles" tabindex="0" style="display:none;">Mostrar roles</button>
+  <button id="new-game-button" aria-label="Comenzar de nuevo" tabindex="0">Comenzar de nuevo</button>
+</main>
+    <script src="/src/Game.js" type="module" defer></script>
+    <script src="/src/Interface.js" type="module" defer></script>
+    <script src="/src/GamePlan.js" type="module" defer></script>
+    <script src="/src/Player.js" type="module" defer></script>
+    <script src="/src/RoleManager.js" type="module" defer></script>
+    <script src="/src/index.js" type="module" defer></script>
 </body>
 </html>
