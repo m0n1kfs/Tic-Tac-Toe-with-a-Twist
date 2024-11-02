@@ -1,74 +1,127 @@
 :root {
-  --bg-color: #f0f0f0;            /* Color de fondo para botones */
-  --button-bg: #333;              /* Color de fondo para botones principales */
-  --button-hover-bg: #555;        /* Color de fondo al pasar el mouse por los botones principales */
-  --button-hover-bg-light: #e0e0e0; /* Color de fondo al pasar el mouse por los botones del tablero */
-}
-
-* {
- box-sizing: border-box;
- margin: 0;
- padding: 0;
+  --bg-color: #f0f0f0;
+  --button-bg: #333;
+  --button-hover-bg: #555;
+  --button-hover-bg-light: #e0e0e0;
 }
 
 body, html {
- height: 100%;
- display: flex;
- justify-content: center;
- align-items: center;
- font-family: 'Poppins', sans-serif;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), 
+              url('/images/background-image.png') center center / cover no-repeat;
 }
 
 header {
- text-align: center;
- margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 main {
- display: flex;
- flex-direction: column;
- align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .tic-tac-toe-board {
- display: flex;
- flex-direction: column;
- gap: 10px;
- margin: 20px 0;
- width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+  width: 450px;
 }
 
 .row {
- display: flex;
- gap: 10px;
+  display: flex;
+  gap: 15px;
 }
 
 .tic-tac-toe-board button {
- width: 100px; 
- height: 100px;
- font-size: 2rem;
- cursor: pointer;
- background-color: var(--bg-color); /* Usando variable para el color de fondo */
- border: 2px solid #333;
- transition: background-color 0.3s;
+  width: 140px;
+  height: 140px;
+  font-size: 3rem;
+  cursor: pointer;
+  background-color: var(--bg-color);
+  border: 2px solid #333;
+  transition: background-color 0.3s;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra en emojis */
 }
 
 .tic-tac-toe-board button:hover {
- background-color: var(--button-hover-bg-light); /* Usando variable para el color de fondo al pasar el mouse */
+  background-color: var(--button-hover-bg-light);
+}
+
+#current-player-container {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
 }
 
 #new-game-button, #show-roles-button {
- margin-top: 20px;
- padding: 10px 20px;
- font-size: 1rem;
- cursor: pointer;
- border: none;
- background-color: var(--button-bg); /* Usando variable para el color de fondo */
- color: #fff;
- transition: background-color 0.3s;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: var(--button-bg);
+  color: #fff;
+  transition: background-color 0.3s;
 }
 
 #new-game-button:hover,
 #show-roles-button:hover {
- background-color: var(--button-hover-bg); /* Usando variable para el color de fondo al pasar el mouse */
+  background-color: var(--button-hover-bg);
+}
+
+.square.darkened {
+  background-color: #777;
+  opacity: 0.8;
+}
+
+.flip {
+  animation: flip 0.5s ease-in-out forwards;
+}
+
+@keyframes flip {
+  0% { transform: rotateY(0); }
+  100% { transform: rotateY(180deg); }
+}
+
+.pop-up {
+  position: absolute;
+  top: 20px; /* Ajustado para que esté encima del tablero */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 1.2rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pop-up p {
+  margin: 0;
+}
+
+.next-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.next-button:hover {
+  color: #555;
 }

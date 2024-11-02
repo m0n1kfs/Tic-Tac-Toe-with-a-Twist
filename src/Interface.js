@@ -18,17 +18,24 @@ export default class Interface {
         });
     }
 
-    updateUI() {
-        // Muestra el turno del jugador actual
+    updateUI(showRoles = false) {
         const currentPlayerDisplay = document.getElementById("currentPlayer");
         currentPlayerDisplay.textContent = `Es el turno de ${this.game.players[this.game.currentPlayerIndex].symbol}`;
-    
-        // Actualiza el estado de cada botón del tablero en función del estado del juego
+        
         const buttons = document.querySelectorAll(".tic-tac-toe-board button");
         buttons.forEach((button, index) => {
             const row = Math.floor(index / 3);
             const col = index % 3;
-            button.textContent = this.game.board[row][col] || ""; // Muestra el símbolo o vacío
+            const cell = this.game.board[row][col];
+                
+            if (showRoles && cell) {
+                const move = this.game.moves.find(m => m.player === cell && m.position === index);
+                button.textContent = move ? this.game.gamePlan.plan[move.role].emoji : cell;
+                button.classList.add("flip");  
+            } else {
+                button.textContent = cell || "";
+                button.classList.remove("flip"); 
+            }
         });
     }    
 }

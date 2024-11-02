@@ -8,35 +8,38 @@
   <title>Tic Tac Toe with a Twist</title>
 </head>
 <body>
-  <header>
-    <span id="currentPlayer" aria-live="polite">¡Haz la primera jugada!</span>
-</header>
-<main>
-  <div class="tic-tac-toe-board" aria-label="Tic Tac Toe Board" role="grid">
-    <div class="row" role="row">
-      <button class="square" data-index="0" role="gridcell"></button>
-      <button class="square" data-index="1" role="gridcell"></button>
-      <button class="square" data-index="2" role="gridcell"></button>
+  <main>
+    <div class="tic-tac-toe-board" aria-label="Tic Tac Toe Board" role="grid">
+      <div class="row" role="row">
+        <button class="square" data-index="0" role="gridcell"></button>
+        <button class="square" data-index="1" role="gridcell"></button>
+        <button class="square" data-index="2" role="gridcell"></button>
+      </div>
+      <div class="row" role="row">
+        <button class="square" data-index="3" role="gridcell"></button>
+        <button class="square" data-index="4" role="gridcell"></button>
+        <button class="square" data-index="5" role="gridcell"></button>
+      </div>
+      <div class="row" role="row">
+        <button class="square" data-index="6" role="gridcell"></button>
+        <button class="square" data-index="7" role="gridcell"></button>
+        <button class="square" data-index="8" role="gridcell"></button>
+      </div>
     </div>
-    <div class="row" role="row">
-      <button class="square" data-index="3" role="gridcell"></button>
-      <button class="square" data-index="4" role="gridcell"></button>
-      <button class="square" data-index="5" role="gridcell"></button>
+    
+    <div id="current-player-container">
+      <span id="currentPlayer" aria-live="polite">¡Haz la primera jugada!</span>
     </div>
-    <div class="row" role="row">
-      <button class="square" data-index="6" role="gridcell"></button>
-      <button class="square" data-index="7" role="gridcell"></button>
-      <button class="square" data-index="8" role="gridcell"></button>
-    </div>
-  </div>
-  <button id="show-roles-button" aria-label="Mostrar roles" tabindex="0" style="display:none;">Mostrar roles</button>
-  <button id="new-game-button" aria-label="Comenzar de nuevo" tabindex="0">Comenzar de nuevo</button>
-</main>
-    <script src="/src/Game.js" type="module" defer></script>
-    <script src="/src/Interface.js" type="module" defer></script>
-    <script src="/src/GamePlan.js" type="module" defer></script>
-    <script src="/src/Player.js" type="module" defer></script>
-    <script src="/src/RoleManager.js" type="module" defer></script>
-    <script src="/src/index.js" type="module" defer></script>
+
+    <button id="show-roles-button" aria-label="Mostrar roles" tabindex="0" style="display:none;">Mostrar roles</button>
+    <button id="new-game-button" aria-label="Comenzar de nuevo" tabindex="0">Comenzar de nuevo</button>
+  </main>
+  <script src="/src/Game.js" type="module" defer></script>
+  <script src="/src/Interface.js" type="module" defer></script>
+  <script src="/src/GamePlan.js" type="module" defer></script>
+  <script src="/src/Player.js" type="module" defer></script>
+  <script src="/src/RoleManager.js" type="module" defer></script>
+  <script src="/src/PopUp.js" type="module" defer></script>
+  <script src="/src/index.js" type="module" defer></script>
 </body>
 </html>
