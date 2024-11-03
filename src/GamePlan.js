@@ -1,81 +1,90 @@
-import { showPopupMessages } from '/src/PopUp.js';
-
 export default class GamePlan {
     constructor() {
         this.plan = {
-            piedra: {
+            "roca": {
                 emoji: "🪨",
-                beats: { tijera: "aplasta a la", lagarto: "machaca al" }
+                beats: {
+                    "tijera": "aplasta",
+                    "lagarto": "aplasta"
+                }
             },
-            papel: {
+            "papel": {
                 emoji: "📄",
-                beats: { piedra: "envuelve a la", spock: "desautoriza a" }
+                beats: {
+                    "roca": "envuelve",
+                    "spock": "desautoriza"
+                }
             },
-            tijera: {
+            "tijera": {
                 emoji: "✂️",
-                beats: { papel: "corta a", lagarto: "decapita a" }
+                beats: {
+                    "papel": "corta",
+                    "lagarto": "decapita"
+                }
             },
-            lagarto: {
+            "lagarto": {
                 emoji: "🦎",
-                beats: { spock: "envenena a", papel: "devora el" }
+                beats: {
+                    "papel": "devora",
+                    "spock": "envenena"
+                }
             },
-            spock: {
+            "spock": {
                 emoji: "🖖",
-                beats: { tijera: "desintegra la", piedra: "vaporiza a la" }
+                beats: {
+                    "tijera": "rompe",
+                    "roca": "vaporiza"
+                }
             }
         };
+        this.roles = Object.keys(this.plan);
     }
-    
-    checkBoardForWinner(board) {
-        for (let i = 0; i < 3; i++) {
-            if (board[i][0] && board[i][0] === board[i][1] && board[i][1] === board[i][2]) {
-                return board[i][0];
-            }
-            if (board[0][i] && board[0][i] === board[1][i] && board[1][i] === board[2][i]) {
-                return board[0][i];
-            }
+
+    getRandomRole(currentRole) {
+        const availableRoles = this.roles.filter(role => role !== currentRole);
+        const randomIndex = Math.floor(Math.random() * availableRoles.length);
+        const role = availableRoles[randomIndex];
+        return role;
+    }
+
+    getWinner(role1, role2) {
+
+        if (!this.plan[role1] || !this.plan[role2]) {
+            return null;
         }
-        if (board[0][0] && board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
-            return board[0][0];
+
+        if (role1 === role2) {
+            return null;
         }
-        if (board[0][2] && board[0][2] === board[1][1] && board[1][1] === board[2][0]) {
-            return board[0][2];
+        if (this.plan[role1].beats[role2]) {
+            return role1;
+        }
+        if (this.plan[role2].beats[role1]) {
+            return role2;
         }
         return null;
     }
 
-    getVictoryCounts(playerXMoves, playerOMoves) {
-        const results = { xVictories: 0, oVictories: 0 };
-        const messages = [];
+    checkBoardForWinner(board) {
+        const lines = [
+            // Filas
+            [board[0][0], board[0][1], board[0][2]],
+            [board[1][0], board[1][1], board[1][2]],
+            [board[2][0], board[2][1], board[2][2]],
+            // Columnas
+            [board[0][0], board[1][0], board[2][0]],
+            [board[0][1], board[1][1], board[2][1]],
+            [board[0][2], board[1][2], board[2][2]],
+            // Diagonales
+            [board[0][0], board[1][1], board[2][2]],
+            [board[0][2], board[1][1], board[2][0]],
+        ];
 
-        for (let i = 0; i < playerXMoves.length; i++) {
-            const playerXMove = playerXMoves[i];
-            const playerOMove = playerOMoves[i];
-            const winner = this.getWinner(playerXMove, playerOMove);
-
-            if (winner === playerXMove) {
-                results.xVictories++;
-                messages.push(`¡${this.plan[playerXMove].emoji} ${this.plan[playerXMove].beats[playerOMove]} ${this.plan[playerOMove].emoji}!`);
-            } else if (winner === playerOMove) {
-                results.oVictories++;
-                messages.push(`¡${this.plan[playerOMove].emoji} ${this.plan[playerOMove].beats[playerXMove]} ${this.plan[playerXMove].emoji}!`);
-            } else {
-                messages.push("¡Empate entre roles!");
+        for (const line of lines) {
+            if (line[0] && line[0] === line[1] && line[1] === line[2]) {
+                return line[0];
             }
         }
-
-        showPopupMessages(messages);
-        return results;
-    }
-
-    getWinner(playerXMove, playerOMove) {
-        if (!this.plan[playerXMove] || !this.plan[playerOMove]) return null;
-
-        if (this.plan[playerXMove]?.beats[playerOMove]) {
-            return playerXMove;
-        } else if (this.plan[playerOMove]?.beats[playerXMove]) {
-            return playerOMove;
-        }
-        return null; // Empate
+        return null;
     }
 }

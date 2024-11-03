@@ -1,45 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Serif&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <title>Tic Tac Toe with a Twist</title>
 </head>
 <body>
   <main>
-    <div class="tic-tac-toe-board" aria-label="Tic Tac Toe Board" role="grid">
+    <div class="tic-tac-toe-board" aria-label="Tablero de Tres en Raya" role="grid">
       <div class="row" role="row">
-        <button class="square" data-index="0" role="gridcell"></button>
-        <button class="square" data-index="1" role="gridcell"></button>
-        <button class="square" data-index="2" role="gridcell"></button>
+        <button class="square" data-index="0" role="gridcell">
+          <div class="square-inner">
+            <div class="square-front"></div>
+            <div class="square-back"></div>
+          </div>
+        </button>
+        <button class="square" data-index="1" role="gridcell">
+          <div class="square-inner">
+            <div class="square-front"></div>
+            <div class="square-back"></div>
+          </div>
+        </button>
+        <button class="square" data-index="2" role="gridcell">
+          <div class="square-inner">
+            <div class="square-front"></div>
+            <div class="square-back"></div>
+          </div>
+        </button>
       </div>
       <div class="row" role="row">
-        <button class="square" data-index="3" role="gridcell"></button>
-        <button class="square" data-index="4" role="gridcell"></button>
-        <button class="square" data-index="5" role="gridcell"></button>
+        <button class="square" data-index="3" role="gridcell">
+          <div class="square-inner">
+            <div class="square-front"></div>
+            <div class="square-back"></div>
+          </div>
+        </button>
+        <button class="square" data-index="4" role="gridcell">
+          <div class="square-inner">
+            <div class="square-front"></div>
+            <div class="square-back"></div>
+          </div>
+        </button>
+        <button class="square" data-index="5" role="gridcell">
+          <div class="square-inner">
+            <div class="square-front"></div>
+            <div class="square-back"></div>
+          </div>
+        </button>
       </div>
       <div class="row" role="row">
-        <button class="square" data-index="6" role="gridcell"></button>
-        <button class="square" data-index="7" role="gridcell"></button>
-        <button class="square" data-index="8" role="gridcell"></button>
+        <button class="square" data-index="6" role="gridcell">
+          <div class="square-inner">
+            <div class="square-front"></div>
+            <div class="square-back"></div>
+          </div>
+        </button>
+        <button class="square" data-index="7" role="gridcell">
+          <div class="square-inner">
+            <div class="square-front"></div>
+            <div class="square-back"></div>
+          </div>
+        </button>
+        <button class="square" data-index="8" role="gridcell">
+          <div class="square-inner">
+            <div class="square-front"></div>
+            <div class="square-back"></div>
+          </div>
+        </button>
       </div>
     </div>
-    
+
     <div id="current-player-container">
       <span id="currentPlayer" aria-live="polite">¡Haz la primera jugada!</span>
+    </div>
+
+    <div id="move-counts">
+      Fichas en el tablero - ❌: <span id="x-moves">0</span>, ⭕: <span id="o-moves">0</span>
     </div>
 
     <button id="show-roles-button" aria-label="Mostrar roles" tabindex="0" style="display:none;">Mostrar roles</button>
     <button id="new-game-button" aria-label="Comenzar de nuevo" tabindex="0">Comenzar de nuevo</button>
   </main>
-  <script src="/src/Game.js" type="module" defer></script>
-  <script src="/src/Interface.js" type="module" defer></script>
-  <script src="/src/GamePlan.js" type="module" defer></script>
-  <script src="/src/Player.js" type="module" defer></script>
-  <script src="/src/RoleManager.js" type="module" defer></script>
-  <script src="/src/PopUp.js" type="module" defer></script>
   <script src="/src/index.js" type="module" defer></script>
 </body>
 </html>

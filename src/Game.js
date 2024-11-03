@@ -1,17 +1,27 @@
-import Player from '/src/Player.js';
-import RoleManager from '/src/RoleManager.js';
 import GamePlan from '/src/GamePlan.js';
 
-function showPopupMessage(message) {
-    const popup = document.createElement("div");
-    popup.className = "pop-up show";
-    popup.innerText = message;
-    document.body.appendChild(popup);
+class Player {
+    constructor(symbol) {
+        this.symbol = symbol;
+        this.moveCount = 0;
+        this.currentRole = null;
+    }
 
-    setTimeout(() => {
-        popup.classList.remove("show");
-        document.body.removeChild(popup);
-    }, 2000);
+    incrementMove() {
+        this.moveCount++;
+    }
+
+    decrementMove() {
+        if (this.moveCount > 0) {
+            this.moveCount--;
+        } else {
+        }
+    }
+
+    reset() {
+        this.moveCount = 0;
+        this.currentRole = null;
+    }
 }
 
 export default class Game {
@@ -19,114 +29,114 @@ export default class Game {
         this.players = [new Player("❌"), new Player("⭕")];
         this.currentPlayerIndex = 0;
         this.board = Array.from({ length: 3 }, () => Array(3).fill(null));
-        this.roleManager = new RoleManager();
         this.gamePlan = new GamePlan();
         this.moves = [];
+        this.gameOver = false;
     }
 
     handleMove(row, col) {
-        if (this.board[row][col] !== null) return;
+        try {
+            if (!this.isMoveValid(row, col)) {
+                return { success: false, message: "Este movimiento no es válido" };
+            }
 
-        const currentPlayer = this.players[this.currentPlayerIndex];
+            const currentPlayer = this.players[this.currentPlayerIndex];
 
-        if (currentPlayer.moveCount >= 3) {
-            showPopupMessage(`${currentPlayer.symbol} ha alcanzado el máximo de movimientos permitidos!`);
+            if (currentPlayer.moveCount >= 3) {
+                console.warn(`${currentPlayer.symbol} ha alcanzado el máximo de movimientos`);
+                return { success: false, message: `¡${currentPlayer.symbol} ha alcanzado el máximo de movimientos permitidos!` };
+            }
+
+            const role = this.gamePlan.getRandomRole(currentPlayer.currentRole);
+            currentPlayer.currentRole = role;
+
+            this.makeMove(row, col, currentPlayer);
+
+            const winner = this.checkForWinner();
+            if (winner) {
+                this.gameOver = true;
+                return { success: true, gameOver: true, winner: winner, message: `¡${winner} ha ganado el juego!` };
+            }
+
+            const gameEnd = this.checkForGameEnd();
+            if (gameEnd) {
+                return { success: true, gameEnd: true };
+            }
+
+            this.switchPlayer();
+            return { success: true };
+        } catch (error) {
+            console.error("Error al realizar el movimiento:", error);
+            return { success: false, message: "Ha ocurrido un error al realizar el movimiento. Inténtalo de nuevo." };
+        }
+    }
+
+    isMoveValid(row, col) {
+        if (this.board[row][col] !== null || this.gameOver) {
+            console.warn(`Movimiento en (${row}, ${col}) no es válido`);
+            return false;
+        }
+        return true;
+    }
+
+    makeMove(row, col, player) {
+        this.board[row][col] = player.symbol;
+        this.moves.push({ player: player.symbol, role: player.currentRole, position: row * 3 + col });
+        player.incrementMove();
+    }
+
+    checkForWinner() {
+        const winner = this.gamePlan.checkBoardForWinner(this.board);
+        if (winner) {
+            return winner;
+        }
+        return null;
+    }
+
+    checkForGameEnd() {
+        const totalMoves = this.players.reduce((sum, player) => sum + player.moveCount, 0);
+        if (totalMoves >= 6 && !this.gameOver) {
+            return true;
+        }
+        return false;
+    }
+
+    switchPlayer() {
+        this.currentPlayerIndex = 1 - this.currentPlayerIndex;
+    }
+
+    removeLoserMove(loserMove) {
+        const { position } = loserMove;
+        const row = Math.floor(position / 3);
+        const col = position % 3;
+
+        if (this.board[row][col] === null) {
             return;
         }
 
-        this.board[row][col] = currentPlayer.symbol;
-        const role = this.roleManager.getRandomRole(currentPlayer.currentRole);
-        currentPlayer.currentRole = role;
-        this.moves.push({ player: currentPlayer.symbol, role, position: row * 3 + col });
+        this.board[row][col] = null;
+        this.moves = this.moves.filter(move => move !== loserMove);
 
-        currentPlayer.incrementMove();
-        this.checkWinner();
-        this.switchPlayer();
-    }    
-
-    switchPlayer() {
-        this.currentPlayerIndex = this.currentPlayerIndex === 0 ? 1 : 0;
-    }
-
-    checkWinner() {
-        if (this.moves.length === 6) {
-            this.showRolesButton();
+        const player = this.players.find(p => p.symbol === loserMove.player);
+        if (player) {
+            player.decrementMove();
         }
     }
 
-    showRolesButton() {
-        const showRolesButton = document.getElementById("show-roles-button");
-        if (showRolesButton) {
-            showRolesButton.style.display = "block";
+    checkIfPlayerWonAllBattles() {
+        const survivingPlayers = new Set(this.moves.map(move => move.player));
+        if (survivingPlayers.size === 1) {
+            const winner = Array.from(survivingPlayers)[0];
+            return winner;
         }
+        return null;
     }
 
-    applyRolesAndDetermineWinners() {
-        const winningMoves = [];
-
-        for (let i = 0; i < this.moves.length; i += 2) {
-            const move = this.moves[i];
-            const opponentMove = this.moves[i + 1];
-
-            if (opponentMove && move.player !== opponentMove.player) {
-                const winnerRole = this.gamePlan.getWinner(move.role, opponentMove.role);
-
-                if (winnerRole === move.role) {
-                    winningMoves.push(move); // Agrega el movimiento ganador
-                } else if (winnerRole === opponentMove.role) {
-                    winningMoves.push(opponentMove); // Agrega el movimiento ganador del oponente
-                }
-            }
-        }
-
-        // Actualiza las jugadas ganadoras y el tablero
-        this.moves = winningMoves;
-        this.updateBoardWithRoles();
-    }
-
-    updateBoardWithRoles() {
-        this.board.forEach((row, rowIndex) => {
-            row.forEach((cell, colIndex) => {
-                const position = rowIndex * 3 + colIndex;
-                const move = this.moves.find(m => m.position === position);
-                this.board[rowIndex][colIndex] = move ? this.gamePlan.plan[move.role].emoji : null;
-            });
+    recalculateMoveCounts() {
+        this.players.forEach(player => {
+            const movesOnBoard = this.moves.filter(move => move.player === player.symbol).length;
+            player.moveCount = movesOnBoard;
         });
-
-        const resetEmojisButton = document.getElementById("reset-emojis-button");
-        if (resetEmojisButton) {
-            resetEmojisButton.style.display = "block";
-        }
-    }
-
-    resetSymbols() {
-        this.moves.forEach(move => {
-            move.player = move.player === "❌" ? "X" : "O";
-        });
-
-        this.updateBoardWithSymbols();
-    }
-
-    updateBoardWithSymbols() {
-        this.board.forEach((row, rowIndex) => {
-            row.forEach((cell, colIndex) => {
-                const position = rowIndex * 3 + colIndex;
-                const move = this.moves.find(m => m.position === position);
-                this.board[rowIndex][colIndex] = move ? move.player : null;
-            });
-        });
-
-        this.recalculateMoves();
-    }
-
-    recalculateMoves() {
-        const xCount = this.board.flat().filter(cell => cell === "❌" || cell === "X").length;
-        const oCount = this.board.flat().filter(cell => cell === "⭕" || cell === "O").length;
-
-        this.players[0].moveCount = xCount;
-        this.players[1].moveCount = oCount;
-
-        showPopupMessage(`Jugadas restantes permitidas - X: ${3 - xCount}, O: ${3 - oCount}`);
     }
 
     resetGame() {
@@ -134,15 +144,33 @@ export default class Game {
         this.board = Array.from({ length: 3 }, () => Array(3).fill(null));
         this.moves = [];
         this.currentPlayerIndex = 0;
+        this.gameOver = false;
+    }
 
-        const showRolesButton = document.getElementById("show-roles-button");
-        if (showRolesButton) {
-            showRolesButton.style.display = "none";
+    getRolePairOutcome(index) {
+        if (index >= this.moves.length - 1) {
+            return null;
         }
 
-        const resetEmojisButton = document.getElementById("reset-emojis-button");
-        if (resetEmojisButton) {
-            resetEmojisButton.style.display = "none";
+        const move = this.moves[index];
+        const opponentMove = this.moves[index + 1];
+
+        if (move && opponentMove && move.player !== opponentMove.player) {
+            const winnerRole = this.gamePlan.getWinner(move.role, opponentMove.role);
+
+            if (winnerRole) {
+                const winnerMove = winnerRole === move.role ? move : opponentMove;
+                const loserMove = winnerRole === move.role ? opponentMove : move;
+                const action = this.gamePlan.plan[winnerRole].beats[loserMove.role];
+                const message = `¡${this.gamePlan.plan[winnerRole].emoji} ${action} ${this.gamePlan.plan[loserMove.role].emoji}! Por tanto, gana ${winnerMove.player}.`;
+                const loserIndex = index + (loserMove === opponentMove ? 1 : 0);
+                return { winnerMove, loserMove, loserIndex, message, index };
+            } else {
+                const message = `Empate entre ${this.gamePlan.plan[move.role].emoji} y ${this.gamePlan.plan[opponentMove.role].emoji}. Ambos permanecen en el tablero.`;
+                return { message, index: index + 2 };
+            }
+        } else {
+            return { index: index + 1 };
         }
     }
 }
