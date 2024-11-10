@@ -1,52 +1,31 @@
 import Game from '/src/Game.js';
 import Interface from '/src/Interface.js';
 
-document.addEventListener("DOMContentLoaded", () => {
+const game = new Game();
+const gameInterface = new Interface(game);
 
-    const game = new Game();
-    const uiManager = new Interface(game);
+document.getElementById('new-game-button').addEventListener('click', () => {
+    game.resetGame();
+    gameInterface.resetUI();
+});
 
-    const newGameButton = document.getElementById("new-game-button");
-    if (newGameButton) {
-        newGameButton.addEventListener("click", () => {
-            try {
-                game.resetGame();
-                uiManager.resetUI();
-            } catch (error) {
+document.getElementById('show-roles-button').addEventListener('click', () => {
+    gameInterface.hideRolesButton();
+    gameInterface.processRolePairs(() => {
+        // Después de procesar los roles, verificamos si hay un ganador en el tablero
+        const winner = game.checkForWinner();
+        if (winner) {
+            game.gameOver = true;
+            gameInterface.displaySingleMessage(`¡${winner} ha ganado el juego!`, true);
+            gameInterface.disableBoard();
+        } else {
+            // También verificamos si un jugador ha ganado todas las batallas
+            const battleWinner = game.checkIfPlayerWonAllBattles();
+            if (battleWinner) {
+                game.gameOver = true;
+                gameInterface.displaySingleMessage(`¡${battleWinner} ha ganado el juego!`, true);
+                gameInterface.disableBoard();
             }
-        });
-    } else {
-    }
-
-    const showRolesButton = document.getElementById("show-roles-button");
-    if (showRolesButton) {
-        showRolesButton.addEventListener("click", () => {
-            uiManager.processRolePairs(() => {
-                uiManager.updateBoardDisplay();
-
-                // Verificar si un jugador ganó todas las batallas
-                const winner = game.checkIfPlayerWonAllBattles();
-                if (winner) {
-                    uiManager.displaySingleMessage(`¡${winner} ha ganado el juego!`, true);
-                    game.gameOver = true;
-                } else {
-                    // Recalcular los contadores de movimientos
-                    game.recalculateMoveCounts();
-                    uiManager.updateMoveCounts();
-                    uiManager.updateBoardDisplay();
-
-                    // Verificar si hay un ganador después de eliminar fichas
-                    const finalWinner = game.checkForWinner();
-                    if (finalWinner) {
-                        uiManager.displaySingleMessage(`¡${finalWinner} ha ganado el juego!`, true);
-                        game.gameOver = true;
-                    } else {
-                        uiManager.hideRolesButton();
-                        uiManager.updateCurrentPlayerDisplay();
-                    }
-                }
-            });
-        });
-    } else {
-    }
+        }
+    });
 });

@@ -35,14 +35,7 @@ export function showSequentialMessages(messages, callback) {
     popupContainer.appendChild(messageElement);
     popupContainer.appendChild(nextButton);
 
-    const board = document.querySelector(".tic-tac-toe-board");
-    if (board && board.parentNode) {
-        board.parentNode.insertBefore(popupContainer, board);
-    } else {
-        console.error("Error: El tablero no está disponible para insertar el popup.");
-        document.body.appendChild(popupContainer);
-    }
-
+    document.body.appendChild(popupContainer);
 }
 
 export function showSingleMessage(message, isWinner = false, callback) {

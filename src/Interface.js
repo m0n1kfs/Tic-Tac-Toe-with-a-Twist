@@ -11,28 +11,35 @@ export default class Interface {
         buttons.forEach(button => {
             button.addEventListener("click", () => {
                 if (this.game.gameOver) {
+                    console.warn("El juego ha terminado, no se pueden realizar más movimientos.");
                     return;
                 }
-
+    
                 const index = parseInt(button.getAttribute("data-index"));
                 const row = Math.floor(index / 3);
                 const col = index % 3;
-
+    
                 const result = this.game.handleMove(row, col);
-
+    
                 if (!result.success) {
                     this.displaySingleMessage(result.message);
+    
+                    // Si ambos jugadores han alcanzado el máximo de movimientos, mostramos el botón para procesar roles
+                    if (result.message.includes("Ambos jugadores han alcanzado el máximo")) {
+                        this.showRolesButton();
+                    }
                     return;
                 }
-
+    
                 this.updateSquareDisplay(button, this.game.board[row][col]);
-
+    
                 if (result.gameOver) {
                     this.displaySingleMessage(result.message, true);
+                    this.disableBoard();
                 } else if (result.gameEnd) {
                     this.showRolesButton();
                 }
-
+    
                 this.updateCurrentPlayerDisplay();
                 this.updateMoveCounts();
             });
@@ -45,7 +52,7 @@ export default class Interface {
 
         if (cellValue) {
             frontFace.textContent = cellValue; // Símbolo del jugador
-            backFace.textContent = ''; // Limpiar la cara posterior
+            backFace.textContent = ''; // Limpia la cara posterior
         } else {
             frontFace.textContent = '';
             backFace.textContent = '';
@@ -135,53 +142,61 @@ export default class Interface {
 
     processRolePairs(callback) {
         let index = 0;
+        const processedPositions = new Set();
 
         const processNextPair = () => {
-
-            const outcome = this.game.getRolePairOutcome(index);
-
-            if (!outcome) {
-                // No hay más pares para procesar
+            if (index >= this.game.moves.length) {
+                console.log("No hay más pares para procesar en la interfaz.");
                 this.flipRemainingPiecesBack(() => {
-                    if (callback) callback();
+                    // Verifica si el juego ha terminado después de las batallas
+                    const winner = this.game.checkForGameOverAfterBattles();
+                    if (winner) {
+                        this.displaySingleMessage(`¡${winner} ha ganado el juego!`, true);
+                        this.disableBoard();
+                        if (callback) callback();
+                    } else {
+                        // Si el juego no ha terminado, actualizamos la interfaz y permitimos seguir jugando
+                        this.updateMoveCounts();
+                        this.updateCurrentPlayerDisplay();
+                        if (callback) callback();
+                    }
                 });
                 return;
             }
 
-            if (outcome.index !== undefined) {
-                index = outcome.index;
-            } else {
-                index += 1;
-            }
+            const outcome = this.game.getRolePairOutcome(index, processedPositions);
 
-            if (outcome.winnerMove || outcome.loserMove) {
-                this.updateBoardWithRolesForPair([outcome.winnerMove, outcome.loserMove], () => {
-                    this.showSequentialMessages([outcome.message], () => {
-                        this.removeLoserPiece(outcome.loserMove, () => {
-                            // Recalcular contadores de movimientos
-                            this.game.recalculateMoveCounts();
-                            this.updateMoveCounts();
+            index = outcome.nextIndex;
 
-                            // Avanzar al siguiente par
-                            index++;
+            if (outcome.winnerMove && outcome.loserMove) {
+                this.updateBoardWithRolesForPair(
+                    [outcome.winnerMove, outcome.loserMove],
+                    () => {
+                        this.showSequentialMessages([outcome.message], () => {
+                            this.removeLoserPiece(outcome.loserMove, () => {
+                                // Recalcula contadores de movimientos
+                                this.game.recalculateMoveCounts();
+                                this.updateMoveCounts();
+
+                                // Procesa el siguiente par
+                                processNextPair();
+                            });
+                        });
+                    }
+                );
+            } else if (outcome.message && outcome.move1 && outcome.move2) {
+                // En caso de empate
+                this.updateBoardWithRolesForPair(
+                    [outcome.move1, outcome.move2],
+                    () => {
+                        this.showSequentialMessages([outcome.message], () => {
+                            // Procesa el siguiente par
                             processNextPair();
                         });
-                    });
-                });
-            } else if (outcome.message) {
-                // En caso de empate
-                const moves = [this.game.moves[index], this.game.moves[index + 1]];
-
-                this.updateBoardWithRolesForPair(moves, () => {
-                    this.showSequentialMessages([outcome.message], () => {
-                        // Avanzar al siguiente par
-                        index += 2;
-                        processNextPair();
-                    });
-                });
+                    }
+                );
             } else {
-                // Continuar al siguiente par
-                index++;
+                // Continua al siguiente par
                 processNextPair();
             }
         };
@@ -210,7 +225,7 @@ export default class Interface {
         currentPlayerDisplay.textContent = "¡Haz la primera jugada!";
         this.updateMoveCounts();
 
-        // Habilitar el tablero
+        // Habilita el tablero
         const buttons = document.querySelectorAll(".tic-tac-toe-board .square");
         buttons.forEach(button => {
             button.disabled = false;
